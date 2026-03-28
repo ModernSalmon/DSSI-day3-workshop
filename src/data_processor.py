@@ -3,7 +3,6 @@ This module contains the various procedures for processing data.
 """
 
 import argparse
-import numpy as np
 import pandas as pd
 import logging
 
@@ -32,36 +31,6 @@ def save_data(data_path, df):
     df.to_csv(data_path.replace('.csv','_processed.csv'), index=False)
     return None
 
-def log_txf(df, cols: list):
-    """
-    Perform log transformation on specified columns in dataset.
-        Parameters:
-            df: input dataframe
-            cols (list): columns that need log transformation
-        Returns:
-            df: resultant dataframe containing newly transformed columns
-    """
-    for col in cols:
-        df[col] = df[col].clip(lower=0)
-        df['log_'+col] = np.log(df[col]+1)
-    return df
-
-def remap_dependents(x):
-    """
-    Convert no_of_dependents into categorical variable.
-        Parameters:
-            x (int): Input category
-        Returns:
-            New category in (str)
-    """
-    if x == 0:
-        return 'no_dep'
-    if x == 1:
-        return '1_dep'
-    if x > 1 and x <= 3:
-        return '2_to_3_dep'
-    return 'more_than_3_dep'
-
 def preprocess(df):
     """
     Orchestrate data pre-processing procedures.
@@ -70,9 +39,9 @@ def preprocess(df):
         Returns:
             df: Resultant dataframe after pre-processing
     """
-    df = log_txf(df, ['residential_assets_value','loan_amount'])
-    df['dep_cat'] = df['no_of_dependents'].map(remap_dependents)
-    return df
+    numeric_cols = df.columns
+    df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric, errors='coerce')
+    return df.dropna()
 
 def run(data_path):
     """

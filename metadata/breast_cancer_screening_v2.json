@@ -1,0 +1,11 @@
+{
+    "name": "breast_cancer_screening",
+    "metrics": {
+        "fdr": 0.07,
+        "recall": 0.93
+    },
+    "version": 2,
+    "registration_date": "2026-03-28T16:01:17.809095",
+    "model": "breast_cancer_screening_model_v2.joblib",
+    "features": "breast_cancer_screening_features_v2.joblib"
+}

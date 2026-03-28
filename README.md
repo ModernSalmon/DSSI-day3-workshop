@@ -1,51 +1,83 @@
-## Data Product Development and Deployment with Streamlit
+## DSSI Day 3 Workshop: Streamlit Community Cloud App
+
+This project customizes the provided framework into a new machine learning application:
+
+**Breast Cancer Screening Risk Checker**
+
+It uses a locally trained `scikit-learn` model, persists the model and metadata, and serves predictions through a Streamlit web app that can be deployed on Streamlit Community Cloud.
+
+### Project Structure
+- `src/training.py`: trains and persists the classifier
+- `src/model_registry.py`: versions and saves models and metadata
+- `src/inference.py`: loads the latest trained model for prediction
+- `src/data_processor.py`: prepares the dataset and inference inputs
+- `app.py`: Streamlit user interface
+- `data/breast_cancer_screening.csv`: local training dataset
+
 ### Requirements
-1. Setup Github account
-2. Install Python 3.11+
-3. Create virtual environment
-```
+1. Python 3.11+
+2. GitHub account
+3. Streamlit Community Cloud account
+4. Virtual environment
+
+### Step 1: Create and activate the environment
+```bash
 python -m venv venv
-```
-4. Activate virtual environment
-* Windows
-```
-venv\Scripts\activate
-```
-* Linux/MacOS
-```
 source venv/bin/activate
-```
-5. Install required packages:
-```
 pip install -r requirements.txt
 ```
-### Prelude: Try Streamlit
-1. Create toy application with Streamlit.
-2. Push repository to GitHub.
-3. Deploy on Streamlit community cloud.  
 
-Sample application code: [toy-app.py](toy-app.py)
-### Step 1: Train and Save Model
-1. Perform EDA and model development on Jupyter notebook.
-2. Develop training and model registry scripts to automate model training and persistance respectively.
-3. Run the training module to train a loan approval model:
+### Step 2: Train and save the model
+Run:
+```bash
+python -m src.training --data_path data/breast_cancer_screening.csv
 ```
-python -m src.training --data_path data/loan_approval_dataset.csv
-```
-Sample model training notebook: [DSSI_LoanModel.ipynb](notebooks/DSSl_LoanModel.ipynb)  
-Sample training script: [training.py](src/training.py)  
-Sample model registry script: [model_registry.py](src/model_registry.py)
-### Step 2: Create App and Load Model
-1. Develop an inference script to serve predictions.
-2. Create a loan approval application with Streamlit that automates decisions with user inputs and trained model.  
 
-Sample inference script: [inference.py](src/inference.py)  
-Sample application code: [app.py](app.py)
-### Step 3: Test App Locally
-Run and test the application locally:
+This will:
+- load the dataset
+- scale the numeric features
+- train a `RandomForestClassifier`
+- evaluate it using recall and false discovery rate
+- save the current best model into `models/`
+- save metadata into `metadata/`
+
+### Step 3: Run the Streamlit app locally
+```bash
+streamlit run app.py --server.port 8080
 ```
-streamlit run app.py
+
+Then open:
+```text
+http://localhost:8080
 ```
-### Step 4: Deploy App Online
-1. Commit repository to GitHub.
-2. Deploy on Streamlit community cloud.
+
+### Step 4: Push to GitHub
+If your remote is named `origin`:
+```bash
+git add .
+git commit -m "Complete Streamlit workshop app"
+git push -u origin main
+```
+
+If your remote is currently named `orgin`, either use that name or rename it first:
+```bash
+git remote rename orgin origin
+git push -u origin main
+```
+
+### Step 5: Deploy on Streamlit Community Cloud
+1. Go to [https://share.streamlit.io](https://share.streamlit.io)
+2. Click `New app`
+3. Select your GitHub repository
+4. Set the main file path to `app.py`
+5. Deploy
+
+### Workshop Submission Checklist
+Your slides should include:
+- group members' names
+- Streamlit application URL with sharing enabled
+- screenshot of the running application
+
+### Notes
+- This is a workshop demo for educational use only.
+- The output is a screening aid, not a real medical diagnosis.
